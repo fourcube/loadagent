@@ -8,7 +8,7 @@ var monitor = require('./monitor');
 
 var requestors = [];
 var REQUESTS = process.env.REQUESTS || 300;
-var PARALLELISM = process.env.PARALLEL || 10;
+var PARALLELISM = process.env.PARALLEL || 5;
 var TARGET = "http://localhost:8080/api";
 var MONITOR = "http://localhost:3000";
 

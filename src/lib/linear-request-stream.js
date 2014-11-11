@@ -15,7 +15,6 @@ module.exports = (function () {
 
     self.produce = function () {
       if(count >= options.maxRequests) {
-        console.log("Done.", count);
         self.push(null);
         return;
       }
