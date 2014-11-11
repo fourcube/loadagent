@@ -1,0 +1,14 @@
+{
+  "name": "loadagent",
+  "description": "Create arbitrary load and report it to a monitor.",
+  "version": "0.0.1",
+  "authors": [
+    "Chris Grieger"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/fourcube/loadagent.git"
+  },
+  "dependencies": {
+  }
+}
