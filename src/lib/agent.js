@@ -2,29 +2,42 @@
 
 var Requestor = require('./requestor');
 var LinearRequestStream = require('./linear-request-stream');
+var ResponseSink = require('./response-sink');
+var monitor = require('./monitor');
+
 
 var requestors = [];
-var REQUESTS = process.env.REQUESTS || 2000;
-var PARALLELISM = process.env.PARALLEL || 100;
+var REQUESTS = process.env.REQUESTS || 300;
+var PARALLELISM = process.env.PARALLEL || 10;
 var TARGET = "http://localhost:8080/api";
-
 var MONITOR = "http://localhost:3000";
 
 console.log("Executing " + REQUESTS + " request(s).");
 
-// Create a standard request stream
-var requestStream = new LinearRequestStream({
-  maxRequests: REQUESTS
+
+monitor.startRun(MONITOR).then(function (runID) {
+  console.log("run: ", runID);
+
+  var responseSink = new ResponseSink({
+    monitorURL: MONITOR,
+    runID: runID
+  });
+
+  // Create a standard request stream
+  var requestSource = new LinearRequestStream({
+    targetURL: TARGET,
+    maxRequests: REQUESTS
+  });
+
+  // Initialize agents
+  for (var i = 0; i < PARALLELISM; i++) {
+    requestors.push(new Requestor({
+      source: requestSource,
+      sink: responseSink
+    }));
+  }
+
 });
-
-// Initialize agents
-for (var i = 0; i < PARALLELISM; i++) {
-  requestors.push(new Requestor({
-    source: requestStream
-  }));
-}
-
-
 
 //function randomInt(min, max) {
 //  return Math.floor(Math.random() * (max - min) + min);

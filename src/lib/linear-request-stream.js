@@ -20,7 +20,7 @@ module.exports = (function () {
         return;
       }
 
-      var data = url.parse("http://localhost:8080/api");
+      var data = url.parse(options.targetURL);
       data.method = "GET";
 
       self.push(data);

@@ -16,7 +16,14 @@ module.exports = (function () {
     // Reset timer
     this.t = process.hrtime();
 
-    console.log(this.id, diff);
+    var result = {
+      data: data,
+      payload: payload,
+      statusCode: status,
+      latency: diff
+    };
+
+    this.sink.write(result);
   }
 
   function consume(payload) {
@@ -70,6 +77,8 @@ module.exports = (function () {
     }
 
     this.source = opts.source;
+    this.sink = opts.sink;
+
     this.t = process.hrtime();
 
     this.registerResponse = registerResponse;

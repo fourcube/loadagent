@@ -10,5 +10,6 @@
     "url": "http://github.com/fourcube/loadagent.git"
   },
   "dependencies": {
+    "q": "^1.1.1"
   }
 }
