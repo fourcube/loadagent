@@ -9,19 +9,31 @@ var extend = require('util')._extend;
 module.exports = (function () {
   var requestorId = 0;
 
-
   function registerResponse(data, payload, status) {
     // Get duration
-    var diff = process.hrtime(this.t);
+    var diff = process.hrtime(this.t),
+      timeInMillis,
+      result;
+
     // Reset timer
     this.t = process.hrtime();
 
-    var result = {
+    timeInMillis = Math.floor(((diff[0] * 1e9) + diff[1]) / 1e6);
+
+    result = {
+      // The response data
       data: data,
+      // Payload we sent with the request
       payload: payload,
+      // Response Status code (can be -1 on error)
       statusCode: status,
-      latency: diff
+      // Time between request and response
+      timeInMillis: timeInMillis,
+      // Timestamp of the response
+      received_at: new Date()
     };
+
+    console.log(result);
 
     this.sink.write(result);
   }
@@ -63,6 +75,7 @@ module.exports = (function () {
         req.write(payload);
       }
 
+      self.t = process.hrtime();
       req.end();
     });
   }
@@ -78,8 +91,6 @@ module.exports = (function () {
 
     this.source = opts.source;
     this.sink = opts.sink;
-
-    this.t = process.hrtime();
 
     this.registerResponse = registerResponse;
     this.id = "Requestor " + ++requestorId;
